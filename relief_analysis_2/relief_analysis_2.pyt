@@ -220,18 +220,17 @@ class Reclassify_3:
         return True
     
     def execute(self, parameters, messages) -> None:
-        if not is_rasterio:
-            in_ras = Raster(parameters[0].valueAsText)
-            out_ras = parameters[1].valueAsText
-            lbr = parameters[2].value
-            ubr = parameters[3].value
+        in_ras = Raster(parameters[0].valueAsText)
+        out_ras = parameters[1].valueAsText
+        lbr = parameters[2].value
+        ubr = parameters[3].value
 
-            lbr, ubr = float(lbr), float(ubr)
+        lbr, ubr = float(lbr), float(ubr)
 
-            out = Con(in_ras < lbr, -1, Con(in_ras > ubr, 1, 0))
-            out.save(out_ras)
+        out = Con(in_ras < lbr, -1, Con(in_ras > ubr, 1, 0))
+        out.save(out_ras)
 
-            return None
+        return None
 
 class HillslopeManual:
     def __init__(self) -> None:
@@ -271,18 +270,17 @@ class HillslopeManual:
         return True
     
     def execute(self, parameters, messages) -> None:
-        if not is_rasterio:
-            slope = Raster(parameters[0].valueAsText)
-            profc = Raster(parameters[1].valueAsText)
-            relel = Raster(parameters[2].valueAsText)
-            out_ras = parameters[3].valueAsText
+        slope = Raster(parameters[0].valueAsText)
+        profc = Raster(parameters[1].valueAsText)
+        relel = Raster(parameters[2].valueAsText)
+        out_ras = parameters[3].valueAsText
 
-            out = Con(slope == 1, 3, 
-                            Con(slope == 0,
-                                            Con(profc == 1, 2, 4),
-                                            Con(relel == 1, 1, 5)))
-            out.save(out_ras)
-            return None
+        out = Con(slope == 1, 3, 
+                        Con(slope == 0,
+                                        Con(profc == 1, 2, 4),
+                                        Con(relel == 1, 1, 5)))
+        out.save(out_ras)
+        return None
         
 class RelativeElevation:
     def __init__(self) -> None:
