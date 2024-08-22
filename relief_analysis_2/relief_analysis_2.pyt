@@ -7,17 +7,6 @@ from arcpy.env import workspace
 import os
 from glob import glob
 
-
-
-# PLANNED: Using an acrpy clone with rasterio installed will allow the processing of tifs larger than of what can fit into memory. 
-# Rasterio is also generally more stable than arcpy, so if error 999999 keeps biting you, try installing rasterio
-is_rasterio = False
-try:
-    import rasterio
-except:
-    pass
-
-
 class Toolbox:
     def __init__(self) -> None:
         self.label = "Relief Analysis 2.0"
