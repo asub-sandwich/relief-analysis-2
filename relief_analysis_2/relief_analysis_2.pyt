@@ -2,7 +2,7 @@
 from arcpy import Raster, Parameter, EnvManager
 from arcpy.sa import Con, NbrRectangle, FocalStatistics
 from arcpy.ddd import SurfaceParameters
-from arcpy.env import workspace
+import arcpy
 
 import os
 from glob import glob
@@ -48,7 +48,7 @@ class HillslopeAutomatic:
             os.mkdir(tmpdir, 0o0777)
         else:
             os.chmod(tmpdir, 0o0777)
-        workspace = tmpdir
+        arcpy.env.workspace = tmpdir
 
         # Calculate Slope
         with EnvManager(parallelProcessingFactor="75%"):
