@@ -201,7 +201,7 @@ class Reclassify_3:
             name = "out_ras",
             datatype = "DERasterDataset",
             parameterType = "Required",
-            direction = "Input")
+            direction = "Output")
         param2 = Parameter(
             displayName="Lower Break",
             name="lower_break",
