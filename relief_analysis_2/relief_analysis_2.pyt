@@ -2,7 +2,10 @@
 from arcpy import Raster, Parameter, EnvManager
 from arcpy.sa import *
 from arcpy.ddd import SurfaceParameters
+<<<<<<< Updated upstream
 import arcpy
+=======
+>>>>>>> Stashed changes
 
 import os
 from glob import glob
