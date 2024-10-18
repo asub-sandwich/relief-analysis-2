@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from arcpy import Raster, Parameter, EnvManager
-from arcpy.sa import Con, NbrRectangle, FocalStatistics
+from arcpy.sa import *
 from arcpy.ddd import SurfaceParameters
 import arcpy
 
@@ -323,4 +323,64 @@ class RelativeElevation:
         out = dem - ((min_focal + max_focal) - dem)
         out.save(out_ras)
         return None
+
+class ZoneCleanup:
+    def __init__(self) -> None:
+        self.label = "Zone Cleanup"
+        self.description = "Uses a moving window to clean up deliniations"
+        return None
     
+    def isLicensed(self) -> bool:
+        return True
+    
+    def getParameterInfo(self) -> list[Parameter]:
+        param0 = Parameter(
+            displayName="Input DHP Raster",
+            name="in_dhp",
+            datatype="DERasterDataset",
+            parameterType="Required",
+            direction="Input")
+        param1 = Parameter(
+            displayName="Output DHP Raster",
+            name="out_dhp",
+            datatype="DERasterDataset",
+            parameterType="Required",
+            direction="Output")
+        return [param0, param1]
+
+    def execute(self, parameters, messages) -> None:
+        in_dhp = Int(parameters[0].valueAsText)
+        out_dhp = parameters[1].valueAsText
+
+        expanded_dhp = Expand(
+            in_raster = in_dhp, 
+            number_cells = 1, 
+            zone_values = [5, 4, 1, 2],
+            expand_method = "MORPHOLOGICAL")
+
+        first_filter = FocalStatistics(
+            in_raster = expanded_dhp,
+            neighborhood = NbrCircle(5, "CELL"),
+            statistics_type = "MAJORITY",
+            ignore_data = "DATA")
+
+        second_filter = FocalStatistics(
+            in_raster = Int(first_filter),
+            neighborhood = NbrCircle(5, "CELL"),
+            statistics_type = "MAJORITY",
+            ignore_data = "DATA")
+
+        expanded_filtered = Expand(
+            in_raster = second_filter,
+            number_cells = 2,
+            zone_values = [5, 4, 1, 2],
+            expand_method = "MORPHOLOGICAL")
+
+        out = BoundaryClean(
+            in_raster = expanded_filtered,
+            sort_type = "ASCEND",
+            number_of_runs = "TWO_WAY")
+
+        out.save(out_dhp)
+        return None
+
