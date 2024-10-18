@@ -12,7 +12,7 @@ class Toolbox:
         self.label = "Relief Analysis 2.0"
         self.alias = "relief_analysis_2"
 
-        self.tools = [HillslopeAutomatic, HillslopeManual, Reclassify_2, Reclassify_3, RelativeElevation]
+        self.tools = [HillslopeAutomatic, HillslopeManual, Reclassify_2, Reclassify_3, RelativeElevation, ZoneCleanup]
         return None
     
 class HillslopeAutomatic:
@@ -362,13 +362,13 @@ class ZoneCleanup:
             in_raster = expanded_dhp,
             neighborhood = NbrCircle(5, "CELL"),
             statistics_type = "MAJORITY",
-            ignore_data = "DATA")
+            ignore_nodata = "DATA")
 
         second_filter = FocalStatistics(
             in_raster = Int(first_filter),
             neighborhood = NbrCircle(5, "CELL"),
             statistics_type = "MAJORITY",
-            ignore_data = "DATA")
+            ignore_nodata = "DATA")
 
         expanded_filtered = Expand(
             in_raster = second_filter,
